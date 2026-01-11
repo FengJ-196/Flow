@@ -1,10 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="offwhite">#F2EAE4</color>
+
+    <color name="red_nothing">#d71923</color>
+    <color name="green_nothing">#27C300</color>
+    <color name="blue_nothing">#2DA8F8</color>
+
+    <color name="light_red">#fff2f2</color>
+    <color name="medium_red">#ff7c7c</color>
+    <color name="deep_red">#471515</color>
+    <color name="deep_red_alt">#241515</color>
+    <color name="alt_light_red">#FFBBBB</color>
+
+    <color name="light_green">#f2fff5</color>
+    <color name="medium_green">#8ce8a1</color>
+    <color name="deep_green">#14401d</color>
+
+    <color name="light_blue">#d9eeff</color>
+    <color name="medium_blue">#8bcaff</color>
+    <color name="deep_blue">#153047</color>
+
+    <color name="dark_background">#1B1B1D</color>
+    <color name="dark_card_background">#414247</color>
+
+    <color name="slider_light">#FFCFCF</color>
+<!--</resources> -->
+
+
+    <!-- ⭐ New colors suggested for the Pomodoro application --> 
+
+    
+    <!-- Colors for different sessions -->
+    <color name="focus_primary">#FF5252</color>    <!-- Color for focus sessions -->
+    <color name="break_primary">#4CAF50</color>    <!-- Color for comfort sessions -->
+    <color name="long_break_primary">#2196F3</color> <!-- Color for long comfort sessions -->
+    
+    <!-- Colors for night mode -->
+    <color name="night_purple">#BB86FC</color>
+    <color name="night_teal">#03DAC6</color>
+    
+    <!-- Colors for gradients -->
+    <color name="gradient_start">#FF6B6B</color>
+    <color name="gradient_end">#FFE66D</color>
+    
+    <!-- Colors for texts -->
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_light">#FFFFFF</color>
 </resources>
