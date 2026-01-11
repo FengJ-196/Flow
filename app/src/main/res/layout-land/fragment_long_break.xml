@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mobile.pomodoro.fragments.LongBreakFragment">
+
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center">
+
+        <!-- LONG BREAK LAYOUT -->
+        <LinearLayout
+            android:id="@+id/long_break_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- LONG BREAK CARD -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/focus_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="50dp">
+
+                <LinearLayout
+                    android:id="@+id/long_break_card_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/deep_blue"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:id="@+id/coffee"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/coffee" />
+
+                    <TextView
+                        android:id="@+id/long_break_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Long Break"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- TIME LAYOUT -->
+        <LinearLayout
+            android:id="@+id/time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:layout_below="@id/long_break_layout"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- MIN TXT -->
+            <TextView
+                android:id="@+id/min_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_black"
+                android:includeFontPadding="false"
+                android:text="24"
+                android:textColor="@color/deep_blue"
+                android:textSize="130sp" />
+
+            <!-- : -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_black"
+                android:includeFontPadding="false"
+                android:text=":"
+                android:textColor="@color/deep_blue"
+                android:textSize="130sp" />
+
+            <!-- SEC TXT -->
+            <TextView
+                android:id="@+id/sec_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_black"
+                android:includeFontPadding="false"
+                android:text="59"
+                android:textColor="@color/deep_blue"
+                android:textSize="130sp" />
+
+        </LinearLayout>
+
+        <!-- BUTTONS LAYOUT -->
+        <LinearLayout
+            android:id="@+id/buttons_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/time_layout"
+            android:gravity="center"
+            android:layout_marginTop="-20dp"
+            android:orientation="horizontal">
+
+            <!-- BUTTONS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- RESET BUTTON -->
+                <ImageView
+                    android:id="@+id/reset_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/reset_blue"
+                    android:visibility="gone" />
+
+                <!-- PLAY BUTTON -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/play_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/medium_blue"
+                        android:gravity="center"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/play_blue" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- PAUSE BUTTON -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/pause_btn"
+                    android:layout_width="100dp"
+                    android:layout_height="80dp"
+                    android:layout_marginHorizontal="10dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/medium_blue"
+                        android:gravity="center"
+                        android:padding="20dp">
+
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/pause_blue" />
+
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- SKIP BUTTON -->
+                <ImageView
+                    android:id="@+id/skip_btn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="10dp"
+                    android:src="@drawable/skip_blue"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!-- BACK TO TIMER TXT -->
+    <TextView
+        android:id="@+id/back_to_timer_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginStart="22dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="← Back to timer"
+        android:textColor="@color/deep_green"
+        android:textSize="16sp" />
+
+</RelativeLayout>

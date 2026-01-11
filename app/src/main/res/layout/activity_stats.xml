@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_red"
+    android:scrollbars="none"
+    tools:context="com.mobile.pomodoro.StatsActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_red">
+
+        <!-- HEADER -->
+        <RelativeLayout
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="20dp">
+
+            <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/back_black" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/back_btn"
+                android:fontFamily="@font/montserrat_bold"
+                android:text="Your Stats"
+                android:textColor="@color/deep_red"
+                android:textSize="37sp" />
+
+        </RelativeLayout>
+
+        <!-- TOTAL FOCUS TIME CARD -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/total_focus_time_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/header"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="15dp"
+            app:cardCornerRadius="30dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/deep_red"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:includeFontPadding="false"
+                    android:text="Total focus time"
+                    android:textColor="@color/light_red"
+                    android:textSize="18sp" />
+
+                <!-- TIME -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- HOUR TXT -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/hrs_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="240"
+                            android:textColor="@color/light_red"
+                            android:textSize="35sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="hrs"
+                            android:textColor="@color/light_red"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                    <!-- MINS TXT -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/mins_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="35"
+                            android:textColor="@color/light_red"
+                            android:textSize="35sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="mins"
+                            android:textColor="@color/light_red"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- YOUR STREAK TXT -->
+        <TextView
+            android:id="@+id/your_streak_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/total_focus_time_card"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:letterSpacing="0.1"
+            android:text="YOUR STREAK"
+            android:textColor="@color/deep_red" />
+
+        <!-- STREAK CARDS LAYOUT -->
+        <LinearLayout
+            android:id="@+id/streak_cards_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/your_streak_txt"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- LONGEST STREAK CARD -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="30dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/medium_red"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:includeFontPadding="false"
+                        android:text="Longest"
+                        android:textColor="@color/deep_red"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/longest_streak_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="14"
+                            android:textColor="@color/deep_red"
+                            android:textSize="35sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="days"
+                            android:textColor="@color/deep_red"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- LONGEST STREAK CARD -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="30dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/alt_light_red"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:includeFontPadding="false"
+                        android:text="Current"
+                        android:textColor="@color/deep_red"
+                        android:textSize="16sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/current_streak_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="3"
+                            android:textColor="@color/deep_red"
+                            android:textSize="35sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
+                            android:fontFamily="@font/montserrat_bold"
+                            android:text="days"
+                            android:textColor="@color/deep_red"
+                            android:textSize="22sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <!-- PROGRESS TXT -->
+        <TextView
+            android:id="@+id/progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/streak_cards_layout"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:letterSpacing="0.1"
+            android:text="PROGRESS"
+            android:textColor="@color/deep_red" />
+
+        <!-- SELECTOR LAYOUT -->
+        <LinearLayout
+            android:id="@+id/selector_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- TODAY -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/today_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/today_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/deep_red"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:id="@+id/today_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Today"
+                        android:textColor="@color/alt_light_red"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- THIS MONTH -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/month_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="30dp">
+
+                <RelativeLayout
+                    android:id="@+id/month_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/alt_light_red"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="10dp">
+
+                    <TextView
+                        android:id="@+id/month_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="This week"
+                        android:textColor="@color/deep_red"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/chart_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="22dp"
+            android:layout_below="@id/selector_layout"
+            android:layout_marginTop="20dp">
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/today_chart"
+                android:layout_width="350dp"
+                android:layout_height="300dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="visible" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/month_chart"
+                android:layout_width="350dp"
+                android:layout_height="300dp"
+                android:layout_centerHorizontal="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/motivation_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/chart_container"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="50dp"
+            android:fontFamily="@font/montserrat_italic"
+            android:gravity="center"
+            android:text="🌱 Consistency is your superpower. You're building momentum one session at a time"
+            android:textColor="@color/deep_red"
+            android:textSize="20sp" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:layout_width="400dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="-60dp"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:layout_below="@id/motivation_txt"
+            app:lottie_rawRes="@raw/lottie_home_neutral"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
+
+</ScrollView>
