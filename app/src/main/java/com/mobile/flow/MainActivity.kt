@@ -1,7 +1,6 @@
-package com.mobile.pomodoro
+package com.mobile.flow
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,32 +15,28 @@ import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.mobile.pomodoro.fragments.TimerFragment
+import com.mobile.flow.fragments.TimerFragment
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatDelegate
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.provider.Settings
 import android.view.View
-import com.airbnb.lottie.Lottie
 import com.airbnb.lottie.LottieAnimationView
-import androidx.core.view.isVisible
-import androidx.core.content.edit
 import java.io.File
 import android.os.Environment
-import com.mobile.pomodoro.fragments.LongBreakFragment
-import com.mobile.pomodoro.fragments.ShortBreakFragment
-import com.mobile.pomodoro.services.TimerService
-import com.mobile.pomodoro.utils.UltraFocusManager
+import com.mobile.flow.fragments.LongBreakFragment
+import com.mobile.flow.fragments.ShortBreakFragment
+import com.mobile.flow.services.TimerService
+import com.mobile.flow.utils.UltraFocusManager
 import android.content.SharedPreferences
-import com.mobile.pomodoro.R
+import com.mobile.flow.R
 import android.widget.RelativeLayout
 class MainActivity : AppCompatActivity() {
     private lateinit var settings_btn: ImageView

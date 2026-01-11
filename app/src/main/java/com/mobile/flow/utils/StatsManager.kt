@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.utils
+package com.mobile.flow.utils
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,7 +8,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 data class Stats(
     val totalFocusMinutes: Long = 0,

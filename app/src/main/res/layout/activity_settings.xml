@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="#EDEDED"
     android:scrollbars="none"
-    tools:context="com.mobile.pomodoro.SettingsActivity">
+    tools:context="com.mobile.flow.SettingsActivity">
 
     <RelativeLayout
         android:id="@+id/container"

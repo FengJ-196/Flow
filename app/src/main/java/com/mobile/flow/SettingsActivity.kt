@@ -1,4 +1,4 @@
-package com.mobile.pomodoro
+package com.mobile.flow
 
 import android.Manifest
 import android.content.SharedPreferences
@@ -37,7 +37,7 @@ import android.content.pm.ActivityInfo
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.widget.Toast
-import com.mobile.pomodoro.utils.UltraFocusManager
+import com.mobile.flow.utils.UltraFocusManager
 import androidx.cardview.widget.CardView
 import android.os.PowerManager
 import android.provider.Settings

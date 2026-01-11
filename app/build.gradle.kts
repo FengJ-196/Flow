@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.mobile.pomodoro"
+    namespace = "com.mobile.flow"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.mobile.pomodoro"
+        applicationId = "com.mobile.flow"
         minSdk = 24
         targetSdk = 35
         versionCode = 14

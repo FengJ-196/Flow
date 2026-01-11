@@ -1,8 +1,7 @@
-package com.mobile.pomodoro
+package com.mobile.flow
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -25,9 +24,8 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.mobile.pomodoro.utils.StatsManager
+import com.mobile.flow.utils.StatsManager
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 class StatsActivity : AppCompatActivity() {
     private lateinit var todayCard: CardView
