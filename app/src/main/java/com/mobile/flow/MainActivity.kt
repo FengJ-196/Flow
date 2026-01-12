@@ -40,6 +40,7 @@ import com.mobile.flow.R
 import android.widget.RelativeLayout
 class MainActivity : AppCompatActivity() {
     private lateinit var settings_btn: ImageView
+    private lateinit var account_btn: ImageView
     private lateinit var frame_layout: FrameLayout
     private lateinit var sessionsTxt: TextView
     private lateinit var musicBtn: ImageView
@@ -343,8 +344,15 @@ class MainActivity : AppCompatActivity() {
 
         sessionsTxt = findViewById(R.id.sessions_txt)
         settings_btn = findViewById(R.id.settings_btn)
+        account_btn = findViewById(R.id.account_btn)
         musicBtn = findViewById(R.id.music_btn)
         musicAnim = findViewById(R.id.music_animated_btn)
+
+        account_btn.setOnClickListener {
+            vibrate()
+            val intent = Intent(this@MainActivity, ProfileActivity::class.java)
+            startActivity(intent)
+        }
 
         settings_btn.setOnClickListener {
             vibrate()
