@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "240899912782",
+    "project_id": "flow-98481",
+    "storage_bucket": "flow-98481.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:240899912782:android:36bd65d118cc53f3e3ff1f",
+        "android_client_info": {
+          "package_name": "com.mobile.pomodoro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240899912782-6gcmtlf09kss3qcmun9c5vk1grkbgr6b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.pomodoro",
+            "certificate_hash": "4ca44001567ae710cc88a66a747aaaecbec7f2bc"
+          }
+        },
+        {
+          "client_id": "240899912782-cpivrl34pocl9mgcafkio20b1spp8kno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDch9-UUtsvJTO2O5A60JFHKkR_iwHQStg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240899912782-cpivrl34pocl9mgcafkio20b1spp8kno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
