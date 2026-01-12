@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.fragments
+package com.mobile.flow.fragments
 
 import android.Manifest
 import android.content.Context
@@ -10,7 +10,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,23 +17,22 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.RequiresPermission
 import androidx.cardview.widget.CardView
-import com.mobile.pomodoro.R
+import com.mobile.flow.R
 import android.widget.RelativeLayout
 import android.app.NotificationManager
 import androidx.core.app.NotificationCompat
 import android.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mobile.pomodoro.adapters.TimerPresetAdapter
-import com.mobile.pomodoro.models.TimerPreset
+import com.mobile.flow.adapters.TimerPresetAdapter
+import com.mobile.flow.models.TimerPreset
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import android.widget.EditText
-import com.mobile.pomodoro.services.TimerService
+import com.mobile.flow.services.TimerService
 import android.content.SharedPreferences
 import android.os.Handler
 import androidx.annotation.RequiresApi
-import com.mobile.pomodoro.utils.StatsManager
+import com.mobile.flow.utils.StatsManager
 
 class TimerFragment : androidx.fragment.app.Fragment() {
     private lateinit var focusCard: CardView
@@ -126,11 +124,7 @@ class TimerFragment : androidx.fragment.app.Fragment() {
         focusTxt.text = sharedPreferences.getString("focusText", "Focus")
 
         val parentLayout = requireActivity().findViewById<RelativeLayout>(R.id.main)
-        val amoledMode = sharedPreferences.getBoolean("amoledMode", false)
 
-        if (amoledMode) {
-            parentLayout.setBackgroundColor(resources.getColor(android.R.color.black))
-        }
 
         updateCountdownText()
         updateSessionsText()

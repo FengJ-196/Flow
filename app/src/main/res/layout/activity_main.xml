@@ -5,7 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mobile.pomodoro.MainActivity">
+    tools:context="com.mobile.flow.MainActivity">
+
+    <!-- ACCOUNT BUTTON -->
+    <ImageView
+        android:id="@+id/account_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="account button"
+        android:src="@drawable/account"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp" />
 
     <!-- SETTINGS BUTTON -->
     <ImageView
@@ -14,10 +26,10 @@
         android:layout_height="30dp"
         android:contentDescription="settings button"
         android:src="@drawable/settings"
+        android:layout_below="@id/account_btn"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:layout_marginEnd="20dp"
-        android:layout_marginTop="15dp" />
+        android:layout_marginTop="10dp" />
 
     <!-- MUSIC BUTTON -->
     <ImageView

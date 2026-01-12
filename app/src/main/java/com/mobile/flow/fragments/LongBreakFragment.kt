@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.fragments
+package com.mobile.flow.fragments
 
 import android.Manifest
 import android.content.Context
@@ -19,12 +19,12 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresPermission
 import androidx.cardview.widget.CardView
-import com.mobile.pomodoro.R
+import com.mobile.flow.R
 import android.app.NotificationManager
 import androidx.core.app.NotificationCompat
 import android.os.Handler
 
-class ShortBreakFragment : Fragment() {
+class LongBreakFragment : Fragment() {
     private lateinit var backToTimer: TextView
     private lateinit var minTxt: TextView
     private lateinit var secTxt: TextView
@@ -33,18 +33,17 @@ class ShortBreakFragment : Fragment() {
     private lateinit var resetBtn: ImageView
     private lateinit var skipBtn: ImageView
     private lateinit var coffee: ImageView
-    private lateinit var shortBreakCardBg: LinearLayout
-    private lateinit var shortBreakTxt: TextView
+    private lateinit var longBreakCardBg: LinearLayout
+    private lateinit var longBreakTxt: TextView
     private lateinit var sessionsTxt: TextView
     private var mediaPlayer: MediaPlayer? = null
     private var clockSoundPlayer: MediaPlayer? = null
+    
     private var countDownTimer: CountDownTimer? = null
     private var timeLeftInMillis: Long = 0
     private var timerRunning = false
     private var currentSession = 1
     private var totalSessions = 4
-    private var autoStart = false
-    private var isFromTimer = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +55,6 @@ class ShortBreakFragment : Fragment() {
             timerRunning = savedInstanceState.getBoolean("timerRunning")
             currentSession = savedInstanceState.getInt("currentSession")
             totalSessions = savedInstanceState.getInt("totalSessions")
-            autoStart = savedInstanceState.getBoolean("autoStart")
-            isFromTimer = savedInstanceState.getBoolean("isFromTimer")
         } else {
             loadSettings()
         }
@@ -69,20 +66,18 @@ class ShortBreakFragment : Fragment() {
         outState.putBoolean("timerRunning", timerRunning)
         outState.putInt("currentSession", currentSession)
         outState.putInt("totalSessions", totalSessions)
-        outState.putBoolean("autoStart", autoStart)
-        outState.putBoolean("isFromTimer", isFromTimer)
     }
 
     private fun loadSettings() {
         val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        timeLeftInMillis = sharedPreferences.getInt("shortBreak", 5) * 60 * 1000L
+        timeLeftInMillis = sharedPreferences.getInt("longBreak", 10) * 60 * 1000L
     }
     
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_short_break, container, false)
+        val view = inflater.inflate(R.layout.fragment_long_break, container, false)
         backToTimer = view.findViewById(R.id.back_to_timer_txt)
         minTxt = view.findViewById(R.id.min_txt)
         secTxt = view.findViewById(R.id.sec_txt)
@@ -91,17 +86,13 @@ class ShortBreakFragment : Fragment() {
         resetBtn = view.findViewById(R.id.reset_btn)
         skipBtn = view.findViewById(R.id.skip_btn)
         coffee = view.findViewById(R.id.coffee)
-        shortBreakCardBg = view.findViewById(R.id.short_break_card_bg)
-        shortBreakTxt = view.findViewById(R.id.short_break_txt)
+        longBreakCardBg = view.findViewById(R.id.long_break_card_bg)
+        longBreakTxt = view.findViewById(R.id.long_break_txt)
         sessionsTxt = requireActivity().findViewById(R.id.sessions_txt)
         
         val parentLayout = requireActivity().findViewById<RelativeLayout>(R.id.main)
         val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        val amoledMode = sharedPreferences.getBoolean("amoledMode", false)
 
-        if (amoledMode) {
-            parentLayout.setBackgroundColor(resources.getColor(R.color.black))
-        }
 
         updateCountdownText()
         updateSessionsText()
@@ -128,7 +119,7 @@ class ShortBreakFragment : Fragment() {
         
         skipBtn.setOnClickListener {
             vibrate()
-            loadLongBreakFragment()
+            loadTimerFragment()
         }
 
         // Restore timer state if it was running
@@ -137,8 +128,6 @@ class ShortBreakFragment : Fragment() {
             pauseBtn.visibility = View.VISIBLE
             resetBtn.visibility = View.VISIBLE
             skipBtn.visibility = View.VISIBLE
-            startTimer()
-        } else if (autoStart && isFromTimer) {
             startTimer()
         }
 
@@ -159,13 +148,7 @@ class ShortBreakFragment : Fragment() {
             parentLayout.setBackgroundResource(R.color.light_red)
         }
         
-        // Always increment session when returning to timer after short break
-        var nextSession = currentSession + 1
-        if (nextSession > totalSessions) {
-            nextSession = 1
-        }
-        // If going back to timer, set isFromShortBreak=true to reset timer
-        val fragment = TimerFragment.newInstance(nextSession, totalSessions, autoStart, true)
+        val fragment = TimerFragment.newInstance(1, totalSessions, false, false)
         parentFragmentManager.beginTransaction()
             .replace(R.id.frame_layout, fragment)
             .commit()
@@ -183,12 +166,8 @@ class ShortBreakFragment : Fragment() {
                 timerRunning = false
                 updateBreakState(false)
                 playAlarm()
-                if (currentSession < totalSessions) {
-                    loadTimerFragment()
-                } else {
-                    Toast.makeText(requireContext(), "All sessions completed", Toast.LENGTH_SHORT).show()
-                    loadLongBreakFragment()
-                }
+                Toast.makeText(requireContext(), "Break completed", Toast.LENGTH_SHORT).show()
+                loadTimerFragment()
             }
         }.start()
         
@@ -233,6 +212,15 @@ class ShortBreakFragment : Fragment() {
         sessionsTxt.text = "$currentSession/$totalSessions"
     }
 
+    private fun updateBreakState(isActive: Boolean) {
+        val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
+        sharedPreferences.edit().apply {
+            putBoolean("isTimerRunning", false)
+            putBoolean("isBreakActive", isActive)
+            apply()
+        }
+    }
+
     @RequiresPermission(Manifest.permission.VIBRATE)
     private fun vibrate() {
         val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
@@ -249,65 +237,6 @@ class ShortBreakFragment : Fragment() {
         }
     }
     
-    private fun loadLongBreakFragment() {
-        val parentLayout = requireActivity().findViewById<RelativeLayout>(R.id.main)
-        val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        val darkMode = sharedPreferences.getBoolean("darkMode", false)
-        val amoledMode = sharedPreferences.getBoolean("amoledMode", false)
-
-        if (amoledMode) {
-            parentLayout.setBackgroundColor(resources.getColor(R.color.black))
-        } else if (darkMode) {
-            parentLayout.setBackgroundResource(R.color.deep_blue)
-        } else {
-            parentLayout.setBackgroundResource(R.color.light_blue)
-        }
-
-        val fragment = LongBreakFragment()
-        fragment.setSessionInfo(1, totalSessions) // Reset to first session
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.frame_layout, fragment)
-            .commit()
-    }
-    
-    override fun onDestroy() {
-        super.onDestroy()
-        countDownTimer?.cancel()
-        mediaPlayer?.release()
-        mediaPlayer = null
-        clockSoundPlayer?.release()
-        clockSoundPlayer = null
-    }
-
-    private fun playClockSound() {
-        val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        val clockSoundEnabled = sharedPreferences.getBoolean("clockSound", false)
-        if (clockSoundEnabled && clockSoundPlayer != null) {
-            try {
-                clockSoundPlayer?.seekTo(0)
-                clockSoundPlayer?.start()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
-
-    fun setSessionInfo(currentSession: Int, totalSessions: Int, autoStart: Boolean, isFromTimer: Boolean = false) {
-        this.currentSession = currentSession
-        this.totalSessions = totalSessions
-        this.autoStart = autoStart
-        this.isFromTimer = isFromTimer
-    }
-
-    private fun updateBreakState(isActive: Boolean) {
-        val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        sharedPreferences.edit().apply {
-            putBoolean("isTimerRunning", false)
-            putBoolean("isBreakActive", isActive)
-            apply()
-        }
-    }
-
     private fun playAlarm() {
         try {
             val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
@@ -317,12 +246,12 @@ class ShortBreakFragment : Fragment() {
             val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val builder = NotificationCompat.Builder(requireContext(), "timer_notifications")
                 .setSmallIcon(R.drawable.coffee)
-                .setContentTitle("Break Time Over")
-                .setContentText("Break time is over. Back to work!")
+                .setContentTitle("Long Break Complete")
+                .setContentText("Rest or reset?")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
 
-            notificationManager.notify(2, builder.build())
+            notificationManager.notify(3, builder.build())
 
             // Vibrate
             try {
@@ -356,5 +285,32 @@ class ShortBreakFragment : Fragment() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countDownTimer?.cancel()
+        mediaPlayer?.release()
+        mediaPlayer = null
+        clockSoundPlayer?.release()
+        clockSoundPlayer = null
+    }
+
+    private fun playClockSound() {
+        val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
+        val clockSoundEnabled = sharedPreferences.getBoolean("clockSound", false)
+        if (clockSoundEnabled && clockSoundPlayer != null) {
+            try {
+                clockSoundPlayer?.seekTo(0)
+                clockSoundPlayer?.start()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun setSessionInfo(currentSession: Int, totalSessions: Int) {
+        this.currentSession = currentSession
+        this.totalSessions = totalSessions
     }
 }

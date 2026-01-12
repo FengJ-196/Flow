@@ -1,12 +1,12 @@
-package com.mobile.pomodoro.adapters
+package com.mobile.flow.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mobile.pomodoro.R
-import com.mobile.pomodoro.models.TimerPreset
+import com.mobile.flow.R
+import com.mobile.flow.models.TimerPreset
 
 class TimerPresetAdapter(
     private var presets: List<TimerPreset>,

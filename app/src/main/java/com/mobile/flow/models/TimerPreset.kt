@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.models
+package com.mobile.flow.models
 
 data class TimerPreset(
     val name: String,

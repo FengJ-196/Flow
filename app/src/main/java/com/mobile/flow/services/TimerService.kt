@@ -1,21 +1,20 @@
-package com.mobile.pomodoro.services
+package com.mobile.flow.services
 
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import com.mobile.pomodoro.MainActivity
-import com.mobile.pomodoro.R
+import com.mobile.flow.MainActivity
+import com.mobile.flow.R
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
-import com.mobile.pomodoro.utils.StatsManager
+import com.mobile.flow.utils.StatsManager
 
 class TimerService : android.app.Service() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -48,9 +47,9 @@ class TimerService : android.app.Service() {
     companion object {
         private const val CHANNEL_ID = "timer_channel"
         private const val NOTIFICATION_ID = 1
-        private const val ACTION_START_TIMER = "com.mobile.pomodoro.START_TIMER"
-        private const val ACTION_STOP_TIMER = "com.mobile.pomodoro.STOP_TIMER"
-        private const val ACTION_APP_OPENED = "com.mobile.pomodoro.APP_OPENED"
+        private const val ACTION_START_TIMER = "com.mobile.flow.START_TIMER"
+        private const val ACTION_STOP_TIMER = "com.mobile.flow.STOP_TIMER"
+        private const val ACTION_APP_OPENED = "com.mobile.flow.APP_OPENED"
         private const val EXTRA_FRAGMENT_TYPE = "fragment_type"
         private const val EXTRA_SESSION_INFO = "session_info"
 
