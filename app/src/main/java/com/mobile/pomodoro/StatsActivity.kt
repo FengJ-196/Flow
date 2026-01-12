@@ -26,6 +26,9 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.mobile.pomodoro.utils.StatsManager
+import com.mobile.pomodoro.utils.Stats
+import com.mobile.pomodoro.utils.DailyStats
+import com.mobile.pomodoro.utils.MinuteStats
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

@@ -10,27 +10,11 @@ import java.time.temporal.ChronoUnit
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-data class Stats(
-    val totalFocusMinutes: Long = 0,
-    val lastFocusDate: String = "",
-    val currentStreak: Int = 0,
-    val longestStreak: Int = 0
-)
-
-data class MinuteStats(
-    val date: String, // e.g. "2024-06-09"
-    val minuteOfDay: Int, // 0-1439
-    val minutes: Int
-)
-
-data class DailyStats(
-    val date: String,
-    val minutes: Int
-)
 
 class StatsManager(context: Context) {
     private val sharedPreferences: SharedPreferences = context.getSharedPreferences("PomodoroStats", Context.MODE_PRIVATE)
     private val gson = Gson()
+    private val syncManager = FirebaseSyncManager()
     
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateStats(focusMinutes: Int) {
@@ -80,11 +64,34 @@ class StatsManager(context: Context) {
         updateDailyStats(currentDate, focusMinutes)
         
         // Save updated stats
+        val finalFocusMinutes = newTotalFocusMinutes
+        val finalCurrentStreak = newCurrentStreak
+        val finalLongestStreak = newLongestStreak
+        
         sharedPreferences.edit().apply {
-            putLong("totalFocusMinutes", newTotalFocusMinutes)
+            putLong("totalFocusMinutes", finalFocusMinutes)
             putString("lastFocusDate", currentDate)
-            putInt("currentStreak", newCurrentStreak)
-            putInt("longestStreak", newLongestStreak)
+            putInt("currentStreak", finalCurrentStreak)
+            putInt("longestStreak", finalLongestStreak)
+            apply()
+        }
+
+        // Sync with Firebase
+        if (AuthManager.getInstance().isSignedIn()) {
+            syncManager.uploadStats(
+                Stats(finalFocusMinutes, currentDate, finalCurrentStreak, finalLongestStreak),
+                loadDailyStats()
+            )
+        }
+    }
+
+    fun syncWithCloud(cloudSummary: Stats, cloudDaily: List<DailyStats>) {
+        sharedPreferences.edit().apply {
+            putLong("totalFocusMinutes", cloudSummary.totalFocusMinutes)
+            putString("lastFocusDate", cloudSummary.lastFocusDate)
+            putInt("currentStreak", cloudSummary.currentStreak)
+            putInt("longestStreak", cloudSummary.longestStreak)
+            putString("dailyStats", gson.toJson(cloudDaily))
             apply()
         }
     }
@@ -137,7 +144,7 @@ class StatsManager(context: Context) {
     
     fun loadStats(): Stats {
         return Stats(
-            totalFocusMinutes = sharedPreferences.getLong("totalFocusMinutes", 0),
+            totalFocusMinutes = sharedPreferences.getLong("totalFocusMinutes", 0L),
             lastFocusDate = sharedPreferences.getString("lastFocusDate", "") ?: "",
             currentStreak = sharedPreferences.getInt("currentStreak", 0),
             longestStreak = sharedPreferences.getInt("longestStreak", 0)

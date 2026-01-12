@@ -38,6 +38,9 @@ import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.widget.Toast
 import com.mobile.pomodoro.utils.UltraFocusManager
+import com.mobile.pomodoro.utils.FirebaseSyncManager
+import com.mobile.pomodoro.utils.StatsManager
+import com.mobile.pomodoro.utils.AuthManager
 import androidx.cardview.widget.CardView
 import android.os.PowerManager
 import android.provider.Settings
@@ -75,6 +78,9 @@ class SettingsActivity : AppCompatActivity() {
     private var originalOrientation: Int = 0
     private var originalDndMode: Int = 0
     private lateinit var notificationManager: NotificationManager
+    private lateinit var accountCard: CardView
+    private lateinit var accountStatus: TextView
+    private lateinit var syncNowBtn: TextView
 
     private var isUpdatingSlider = false
 
@@ -160,6 +166,31 @@ class SettingsActivity : AppCompatActivity() {
             vibrate()
             startActivity(Intent(this@SettingsActivity, StatsActivity::class.java))
         }
+
+        accountCard.setOnClickListener {
+            vibrate()
+            startActivity(Intent(this@SettingsActivity, LoginActivity::class.java))
+        }
+        updateAccountStatus()
+        
+        syncNowBtn.setOnClickListener {
+            vibrate()
+            val statsManager = StatsManager(this)
+            val syncManager = FirebaseSyncManager()
+            syncManager.uploadStats(statsManager.loadStats(), statsManager.loadDailyStats())
+            Toast.makeText(this, "Data synced to cloud", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateAccountStatus() {
+        val authManager = AuthManager.getInstance()
+        if (authManager.isSignedIn()) {
+            accountStatus.text = authManager.currentUser?.email ?: "Signed in"
+            syncNowBtn.visibility = View.VISIBLE
+        } else {
+            accountStatus.text = "Not signed in"
+            syncNowBtn.visibility = View.GONE
+        }
     }
 
 
@@ -183,6 +214,7 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        updateAccountStatus()
         // Lock to portrait unless ultra focus mode is enabled
         val ultraFocusMode = sharedPreferences.getBoolean("ultraFocusMode", false)
         if (ultraFocusMode) {
@@ -225,6 +257,9 @@ class SettingsActivity : AppCompatActivity() {
         keepScreenAwakeToggle = findViewById(R.id.keep_screen_awake_toggle)
         hapticFeedbackToggle = findViewById(R.id.haptic_feedback_toggle)
         statsCard = findViewById(R.id.stats_card)
+        accountCard = findViewById(R.id.account_card)
+        accountStatus = findViewById(R.id.account_status)
+        syncNowBtn = findViewById(R.id.sync_now_btn)
     }
 
     private fun loadSavedSettings() {

@@ -24,6 +24,9 @@
         android:theme="@style/Theme.MinimalPomodoro"
         tools:targetApi="31">
         <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".StatsActivity"
             android:exported="false" />
         <activity
