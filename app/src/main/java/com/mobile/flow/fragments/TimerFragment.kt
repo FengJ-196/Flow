@@ -124,11 +124,7 @@ class TimerFragment : androidx.fragment.app.Fragment() {
         focusTxt.text = sharedPreferences.getString("focusText", "Focus")
 
         val parentLayout = requireActivity().findViewById<RelativeLayout>(R.id.main)
-        val amoledMode = sharedPreferences.getBoolean("amoledMode", false)
 
-        if (amoledMode) {
-            parentLayout.setBackgroundColor(resources.getColor(android.R.color.black))
-        }
 
         updateCountdownText()
         updateSessionsText()

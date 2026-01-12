@@ -92,11 +92,7 @@ class LongBreakFragment : Fragment() {
         
         val parentLayout = requireActivity().findViewById<RelativeLayout>(R.id.main)
         val sharedPreferences = requireContext().getSharedPreferences("PomodoroSettings", Context.MODE_PRIVATE)
-        val amoledMode = sharedPreferences.getBoolean("amoledMode", false)
 
-        if (amoledMode) {
-            parentLayout.setBackgroundColor(resources.getColor(R.color.black))
-        }
 
         updateCountdownText()
         updateSessionsText()
