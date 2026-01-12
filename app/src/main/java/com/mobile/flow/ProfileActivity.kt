@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -26,6 +25,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var currentStreakTxt: TextView
     private lateinit var sessionsCompletedTxt: TextView
     private lateinit var statsCard: CardView
+    private lateinit var loginCard: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +49,7 @@ class ProfileActivity : AppCompatActivity() {
         currentStreakTxt = findViewById(R.id.current_streak_txt)
         sessionsCompletedTxt = findViewById(R.id.sessions_completed_txt)
         statsCard = findViewById(R.id.stats_card)
+        loginCard = findViewById(R.id.login_card)
 
         // Load user profile data
         loadProfileData()
@@ -60,6 +61,12 @@ class ProfileActivity : AppCompatActivity() {
         statsCard.setOnClickListener {
             vibrate()
             val intent = Intent(this, StatsActivity::class.java)
+            startActivity(intent)
+        }
+
+        loginCard.setOnClickListener {
+            vibrate()
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
     }

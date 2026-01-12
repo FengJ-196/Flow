@@ -30,6 +30,9 @@
             android:name="com.mobile.flow.ProfileActivity"
             android:exported="false" />
         <activity
+            android:name="com.mobile.flow.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name="com.mobile.flow.SettingsActivity"
             android:exported="false" />
         <activity
