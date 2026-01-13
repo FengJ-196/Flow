@@ -19,16 +19,18 @@ import com.mobile.flow.utils.StatsManager
 import com.mobile.flow.utils.AuthManager
 import com.google.firebase.auth.FirebaseAuth
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity(), android.content.SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var statsManager: StatsManager
     private lateinit var userNameTxt: TextView
     private lateinit var userEmailTxt: TextView
     private lateinit var totalFocusTimeTxt: TextView
     private lateinit var currentStreakTxt: TextView
-    private lateinit var sessionsCompletedTxt: TextView
+    private lateinit var longestStreakTxt: TextView
     private lateinit var statsCard: CardView
     private lateinit var loginCard: CardView
     private lateinit var logoutCard: CardView
+    private lateinit var clearDataCard: CardView
+    private lateinit var statsPrefs: android.content.SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,18 +44,20 @@ class ProfileActivity : AppCompatActivity() {
             insets
         }
 
-        // Initialize StatsManager
+        // Initialize StatsManager and SharedPreferences
         statsManager = StatsManager(this)
+        statsPrefs = getSharedPreferences("PomodoroStats", MODE_PRIVATE)
 
         // Bind UI elements
         userNameTxt = findViewById(R.id.user_name_txt)
         userEmailTxt = findViewById(R.id.user_email_txt)
         totalFocusTimeTxt = findViewById(R.id.total_focus_time_txt)
         currentStreakTxt = findViewById(R.id.current_streak_txt)
-        sessionsCompletedTxt = findViewById(R.id.sessions_completed_txt)
+        longestStreakTxt = findViewById(R.id.longest_streak_txt)
         statsCard = findViewById(R.id.stats_card)
         loginCard = findViewById(R.id.login_card)
         logoutCard = findViewById(R.id.logout_card)
+        clearDataCard = findViewById(R.id.clear_data_card)
 
         // Load user profile data
         loadProfileData()
@@ -79,27 +83,64 @@ class ProfileActivity : AppCompatActivity() {
         logoutCard.setOnClickListener {
             vibrate()
             AuthManager.getInstance().signOut()
+            
+            // Clear all local data (stats and profile)
+            statsManager.clearAllStats()
+
+            // Refresh UI immediately
             loadProfileData()
-            android.widget.Toast.makeText(this, "Signed out successfully", android.widget.Toast.LENGTH_SHORT).show()
+            loadStatsData()
+
+            android.widget.Toast.makeText(this, "Signed out and data cleared", android.widget.Toast.LENGTH_SHORT).show()
+        }
+        
+        clearDataCard.setOnClickListener {
+            vibrate()
+            showClearDataConfirmation()
         }
     }
 
-    private fun loadProfileData() {
-        val currentUser = AuthManager.getInstance().currentUser
+    private fun showClearDataConfirmation() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Clear All Local Data")
+            .setMessage("Are you sure you want to clear all your local statistics? This action cannot be undone.")
+            .setPositiveButton("Clear") { _, _ ->
+                statsManager.clearAllStats()
+                loadStatsData()
+                android.widget.Toast.makeText(this, "Local data cleared", android.widget.Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 
-        if (currentUser != null) {
-            // Load from Firebase
-            userNameTxt.text = currentUser.displayName ?: "User"
-            userEmailTxt.text = currentUser.email ?: ""
-            findViewById<TextView>(R.id.login_status_txt).visibility = android.view.View.GONE
+    private fun loadProfileData() {
+        val userName = statsPrefs.getString("userName", null)
+        val userEmail = statsPrefs.getString("userEmail", null)
+        val isSignedIn = AuthManager.getInstance().isSignedIn()
+
+        if (isSignedIn || userName != null) {
+            // Load from Preferences (or Firebase as fallback)
+            val displayName = userName ?: AuthManager.getInstance().currentUser?.displayName ?: "User"
+            val email = userEmail ?: AuthManager.getInstance().currentUser?.email ?: ""
+            
+            userNameTxt.text = displayName
+            userEmailTxt.text = email
+            loginCard.visibility = android.view.View.GONE
             logoutCard.visibility = android.view.View.VISIBLE
         } else {
-            // Fallback to local
-            val sharedPreferences = getSharedPreferences("PomodoroSettings", MODE_PRIVATE)
-            userNameTxt.text = sharedPreferences.getString("user_name", "User") ?: "User"
-            userEmailTxt.text = sharedPreferences.getString("user_email", "user@example.com") ?: "user@example.com"
+            // Guest mode
+            userNameTxt.text = "Guest"
+            userEmailTxt.text = "Sign in to sync your data"
             findViewById<TextView>(R.id.login_status_txt).text = "Login / Sign Up"
+            loginCard.visibility = android.view.View.VISIBLE
             logoutCard.visibility = android.view.View.GONE
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: android.content.SharedPreferences?, key: String?) {
+        if (key == "userName" || key == "userEmail" || key == "totalFocusMinutes" || key == "currentStreak" || key == "longestStreak" || key == "dailyStats") {
+            loadProfileData()
+            loadStatsData()
         }
     }
 
@@ -114,9 +155,8 @@ class ProfileActivity : AppCompatActivity() {
         // Display current streak
         currentStreakTxt.text = "${stats.currentStreak}"
 
-        // Calculate total sessions (assuming 25 minutes per session)
-        val totalSessions = stats.totalFocusMinutes / 25
-        sessionsCompletedTxt.text = "$totalSessions"
+        // Display longest streak
+        longestStreakTxt.text = "${stats.longestStreak}"
     }
 
     private fun applyTheme() {
@@ -166,8 +206,17 @@ class ProfileActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh stats when returning to this screen
+        // Refresh stats and profile
         loadStatsData()
+        loadProfileData()
+        // Register listener for reactive updates
+        statsPrefs.registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Unregister listener to prevent memory leaks
+        statsPrefs.unregisterOnSharedPreferenceChangeListener(this)
     }
 }
 

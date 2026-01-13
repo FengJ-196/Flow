@@ -120,6 +120,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun onAuthSuccess() {
+        val currentUser = AuthManager.getInstance().currentUser
+        if (currentUser != null) {
+            val statsPrefs = getSharedPreferences("PomodoroStats", MODE_PRIVATE)
+            statsPrefs.edit().apply {
+                putString("userName", currentUser.displayName)
+                putString("userEmail", currentUser.email)
+                apply()
+            }
+        }
+
         Toast.makeText(this, "Signed in successfully", Toast.LENGTH_SHORT).show()
         val syncManager = FirebaseSyncManager()
         val statsManager = StatsManager(this)

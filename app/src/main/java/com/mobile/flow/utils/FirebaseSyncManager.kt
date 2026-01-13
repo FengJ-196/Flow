@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.Timestamp
+import com.mobile.flow.models.DailyStats
+import com.mobile.flow.models.Stats
 
 class FirebaseSyncManager {
 

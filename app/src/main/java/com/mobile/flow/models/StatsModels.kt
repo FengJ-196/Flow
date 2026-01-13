@@ -1,4 +1,4 @@
-package com.mobile.flow.utils
+package com.mobile.flow.models
 
 data class Stats(
     val totalFocusMinutes: Long = 0L,

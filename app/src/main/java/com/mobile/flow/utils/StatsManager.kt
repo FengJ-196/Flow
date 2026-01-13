@@ -6,8 +6,10 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import com.google.gson.Gson
+import com.mobile.flow.models.DailyStats
+import com.mobile.flow.models.MinuteStats
+import com.mobile.flow.models.Stats
 
 
 class StatsManager(context: Context) {
@@ -25,42 +27,20 @@ class StatsManager(context: Context) {
         // Update total focus time
         val newTotalFocusMinutes = stats.totalFocusMinutes + focusMinutes
         
-        // Update streak
-        var newCurrentStreak = stats.currentStreak
-        var newLongestStreak = stats.longestStreak
-        
-        if (stats.lastFocusDate.isNotEmpty()) {
-            val lastDate = LocalDate.parse(stats.lastFocusDate)
-            val daysBetween = ChronoUnit.DAYS.between(lastDate, LocalDate.now())
-            
-            when {
-                daysBetween == 1L -> {
-                    // Consecutive day
-                    newCurrentStreak++
-                }
-                daysBetween > 1L -> {
-                    // Streak broken
-                    newCurrentStreak = 1
-                }
-                daysBetween == 0L -> {
-                    // Same day, don't update streak
-                }
-            }
-        } else {
-            // First time focusing
-            newCurrentStreak = 1
-        }
-        
-        // Update longest streak if needed
-        if (newCurrentStreak > newLongestStreak) {
-            newLongestStreak = newCurrentStreak
-        }
-        
         // Update minute stats
         updateMinuteStats(currentDate, minuteOfDay, focusMinutes)
         
         // Update daily stats
         updateDailyStats(currentDate, focusMinutes)
+
+        // Recalculate streak from history
+        val dailyStats = loadDailyStats()
+        val newCurrentStreak = calculateCurrentStreak(dailyStats)
+        var newLongestStreak = stats.longestStreak
+        
+        if (newCurrentStreak > newLongestStreak) {
+            newLongestStreak = newCurrentStreak
+        }
         
         // Save updated stats
         val finalFocusMinutes = newTotalFocusMinutes
@@ -85,40 +65,14 @@ class StatsManager(context: Context) {
     }
 
     fun syncWithCloud(cloudSummary: Stats, cloudDaily: List<DailyStats>) {
-        val localStats = loadStats()
-        
-        // Merge Summary Stats: Take the maximum of local and cloud
-        val mergedTotalMinutes = maxOf(localStats.totalFocusMinutes, cloudSummary.totalFocusMinutes)
-        val mergedLongestStreak = maxOf(localStats.longestStreak, cloudSummary.longestStreak)
-        
-        // Use the later date for lastFocusDate
-        val mergedLastDate = if (localStats.lastFocusDate >= cloudSummary.lastFocusDate) {
-            localStats.lastFocusDate
-        } else {
-            cloudSummary.lastFocusDate
-        }
-        
-        // For current streak, let's take the cloud one if it's non-zero, or local if it's newer
-        val mergedCurrentStreak = if (cloudSummary.currentStreak > 0) cloudSummary.currentStreak else localStats.currentStreak
-
-        // Merge Daily Stats: Union of both lists, taking higher minutes for same date
-        val localDaily = loadDailyStats()
-        val dailyMap = localDaily.associateBy { it.date }.toMutableMap()
-        
-        for (cloudDay in cloudDaily) {
-            val existingLocal = dailyMap[cloudDay.date]
-            if (existingLocal == null || cloudDay.minutes > existingLocal.minutes) {
-                dailyMap[cloudDay.date] = cloudDay
-            }
-        }
-        
-        val mergedDaily = dailyMap.values.sortedBy { it.date }.takeLast(30)
+        // Overwrite local stats with cloud data directly
+        val mergedDaily = cloudDaily.sortedBy { it.date }.takeLast(30)
 
         sharedPreferences.edit().apply {
-            putLong("totalFocusMinutes", mergedTotalMinutes)
-            putString("lastFocusDate", mergedLastDate)
-            putInt("currentStreak", mergedCurrentStreak)
-            putInt("longestStreak", mergedLongestStreak)
+            putLong("totalFocusMinutes", cloudSummary.totalFocusMinutes)
+            putString("lastFocusDate", cloudSummary.lastFocusDate)
+            putInt("currentStreak", cloudSummary.currentStreak)
+            putInt("longestStreak", cloudSummary.longestStreak)
             putString("dailyStats", gson.toJson(mergedDaily))
             apply()
         }
@@ -161,8 +115,8 @@ class StatsManager(context: Context) {
         // Sort by date
         dailyStats.sortBy { it.date }
         
-        // Keep only last 30 days
-        if (dailyStats.size > 30) {
+        // Keep only last 365 days
+        if (dailyStats.size > 365) {
             dailyStats.removeAt(0)
         }
         
@@ -171,13 +125,50 @@ class StatsManager(context: Context) {
     }
     
     fun loadStats(): Stats {
+        val dailyStats = loadDailyStats()
         return Stats(
             totalFocusMinutes = sharedPreferences.getLong("totalFocusMinutes", 0L),
             lastFocusDate = sharedPreferences.getString("lastFocusDate", "") ?: "",
-            currentStreak = sharedPreferences.getInt("currentStreak", 0),
+            currentStreak = calculateCurrentStreak(dailyStats),
             longestStreak = sharedPreferences.getInt("longestStreak", 0)
         )
     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun calculateCurrentStreak(dailyStats: List<DailyStats>): Int {
+        if (dailyStats.isEmpty()) return 0
+        
+        val sortedStats = dailyStats.sortedByDescending { it.date }
+        val today = LocalDate.now()
+        val yesterday = today.minusDays(1)
+        
+        // Find the most recent focus date
+        val lastDate = LocalDate.parse(sortedStats[0].date)
+        
+        if (lastDate != today && lastDate != yesterday) {
+            // Streak broken - no focus today or yesterday
+            return 0
+        }
+        
+        // Count consecutive days backwards
+        var streak = 0
+        var expectedDate = lastDate
+        
+        for (stat in sortedStats) {
+            val statDate = LocalDate.parse(stat.date)
+            if (statDate == expectedDate) {
+                streak++
+                expectedDate = expectedDate.minusDays(1)
+            } else if (statDate.isBefore(expectedDate)) {
+                // Gap in history
+                break
+            }
+        }
+        
+        return streak
+    }
+
+
     
     fun getFormattedTotalFocusTime(): Pair<Int, Int> {
         val totalMinutes = loadStats().totalFocusMinutes

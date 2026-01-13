@@ -128,7 +128,7 @@ class ShortBreakFragment : Fragment() {
         
         skipBtn.setOnClickListener {
             vibrate()
-            loadLongBreakFragment()
+            loadTimerFragment()
         }
 
         // Restore timer state if it was running
@@ -164,6 +164,10 @@ class ShortBreakFragment : Fragment() {
         if (nextSession > totalSessions) {
             nextSession = 1
         }
+
+        // Persist the next session
+        sharedPreferences.edit().putInt("currentSession", nextSession).apply()
+
         // If going back to timer, set isFromShortBreak=true to reset timer
         val fragment = TimerFragment.newInstance(nextSession, totalSessions, autoStart, true)
         parentFragmentManager.beginTransaction()

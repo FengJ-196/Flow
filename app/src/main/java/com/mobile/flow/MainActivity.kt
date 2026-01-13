@@ -280,6 +280,7 @@ class MainActivity : AppCompatActivity() {
         
         // Initialize sharedPreferences
         sharedPreferences = getSharedPreferences("PomodoroSettings", MODE_PRIVATE)
+        sharedPreferences.edit().clear().apply()
         // Lock to portrait unless ultra focus mode is enabled
         if (sharedPreferences.getBoolean("ultraFocusMode", false)) {
             UltraFocusManager.enableUltraFocusMode(this)

@@ -197,8 +197,19 @@ class SettingsActivity : AppCompatActivity() {
         signOutBtn.setOnClickListener {
             vibrate()
             AuthManager.getInstance().signOut()
+            
+            // Clear local data for consistency
+            val statsManager = StatsManager(this)
+            statsManager.clearAllStats()
+
             updateAccountStatus()
             Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
+
+            // Navigate to ProfileActivity and clear top to refresh it
+            val intent = Intent(this, ProfileActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(intent)
+            finish()
         }
     }
 
