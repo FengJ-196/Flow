@@ -85,12 +85,41 @@ class StatsManager(context: Context) {
     }
 
     fun syncWithCloud(cloudSummary: Stats, cloudDaily: List<DailyStats>) {
+        val localStats = loadStats()
+        
+        // Merge Summary Stats: Take the maximum of local and cloud
+        val mergedTotalMinutes = maxOf(localStats.totalFocusMinutes, cloudSummary.totalFocusMinutes)
+        val mergedLongestStreak = maxOf(localStats.longestStreak, cloudSummary.longestStreak)
+        
+        // Use the later date for lastFocusDate
+        val mergedLastDate = if (localStats.lastFocusDate >= cloudSummary.lastFocusDate) {
+            localStats.lastFocusDate
+        } else {
+            cloudSummary.lastFocusDate
+        }
+        
+        // For current streak, let's take the cloud one if it's non-zero, or local if it's newer
+        val mergedCurrentStreak = if (cloudSummary.currentStreak > 0) cloudSummary.currentStreak else localStats.currentStreak
+
+        // Merge Daily Stats: Union of both lists, taking higher minutes for same date
+        val localDaily = loadDailyStats()
+        val dailyMap = localDaily.associateBy { it.date }.toMutableMap()
+        
+        for (cloudDay in cloudDaily) {
+            val existingLocal = dailyMap[cloudDay.date]
+            if (existingLocal == null || cloudDay.minutes > existingLocal.minutes) {
+                dailyMap[cloudDay.date] = cloudDay
+            }
+        }
+        
+        val mergedDaily = dailyMap.values.sortedBy { it.date }.takeLast(30)
+
         sharedPreferences.edit().apply {
-            putLong("totalFocusMinutes", cloudSummary.totalFocusMinutes)
-            putString("lastFocusDate", cloudSummary.lastFocusDate)
-            putInt("currentStreak", cloudSummary.currentStreak)
-            putInt("longestStreak", cloudSummary.longestStreak)
-            putString("dailyStats", gson.toJson(cloudDaily))
+            putLong("totalFocusMinutes", mergedTotalMinutes)
+            putString("lastFocusDate", mergedLastDate)
+            putInt("currentStreak", mergedCurrentStreak)
+            putInt("longestStreak", mergedLongestStreak)
+            putString("dailyStats", gson.toJson(mergedDaily))
             apply()
         }
     }

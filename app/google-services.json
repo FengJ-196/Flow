@@ -7,6 +7,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:240899912782:android:9e9fca82639a319de3ff1f",
+        "android_client_info": {
+          "package_name": "com.mobile.flow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "240899912782-p8hq1akhtlta27dl2mhv0i1lp3r5vi86.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.flow",
+            "certificate_hash": "4ca44001567ae710cc88a66a747aaaecbec7f2bc"
+          }
+        },
+        {
+          "client_id": "240899912782-cpivrl34pocl9mgcafkio20b1spp8kno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDch9-UUtsvJTO2O5A60JFHKkR_iwHQStg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "240899912782-cpivrl34pocl9mgcafkio20b1spp8kno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:240899912782:android:36bd65d118cc53f3e3ff1f",
         "android_client_info": {
           "package_name": "com.mobile.pomodoro"

@@ -310,11 +310,51 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- LOGOUT BUTTON CARD -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/logout_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_card"
+            android:layout_marginHorizontal="22dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            app:cardCornerRadius="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Sign Out"
+                    android:textColor="#FF6347"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/account"
+                    app:tint="#FF6347"
+                    android:contentDescription="Logout Icon" />
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
         <!--BLANK SPACE-->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="10dp"
-            android:layout_below="@id/login_card" />
+            android:layout_below="@id/logout_card" />
 
     </RelativeLayout>
 

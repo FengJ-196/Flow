@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.utils
+package com.mobile.flow.utils
 
 data class Stats(
     val totalFocusMinutes: Long = 0L,

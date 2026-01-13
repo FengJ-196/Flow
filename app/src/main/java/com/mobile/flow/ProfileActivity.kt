@@ -16,6 +16,8 @@ import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mobile.flow.utils.StatsManager
+import com.mobile.flow.utils.AuthManager
+import com.google.firebase.auth.FirebaseAuth
 
 class ProfileActivity : AppCompatActivity() {
     private lateinit var statsManager: StatsManager
@@ -26,6 +28,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var sessionsCompletedTxt: TextView
     private lateinit var statsCard: CardView
     private lateinit var loginCard: CardView
+    private lateinit var logoutCard: CardView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +53,7 @@ class ProfileActivity : AppCompatActivity() {
         sessionsCompletedTxt = findViewById(R.id.sessions_completed_txt)
         statsCard = findViewById(R.id.stats_card)
         loginCard = findViewById(R.id.login_card)
+        logoutCard = findViewById(R.id.logout_card)
 
         // Load user profile data
         loadProfileData()
@@ -66,21 +70,37 @@ class ProfileActivity : AppCompatActivity() {
 
         loginCard.setOnClickListener {
             vibrate()
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            if (!AuthManager.getInstance().isSignedIn()) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+        logoutCard.setOnClickListener {
+            vibrate()
+            AuthManager.getInstance().signOut()
+            loadProfileData()
+            android.widget.Toast.makeText(this, "Signed out successfully", android.widget.Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun loadProfileData() {
-        val sharedPreferences = getSharedPreferences("PomodoroSettings", MODE_PRIVATE)
+        val currentUser = AuthManager.getInstance().currentUser
 
-        // Load user name (default to "User")
-        val userName = sharedPreferences.getString("user_name", "User") ?: "User"
-        userNameTxt.text = userName
-
-        // Load user email (default to empty)
-        val userEmail = sharedPreferences.getString("user_email", "user@example.com") ?: "user@example.com"
-        userEmailTxt.text = userEmail
+        if (currentUser != null) {
+            // Load from Firebase
+            userNameTxt.text = currentUser.displayName ?: "User"
+            userEmailTxt.text = currentUser.email ?: ""
+            findViewById<TextView>(R.id.login_status_txt).visibility = android.view.View.GONE
+            logoutCard.visibility = android.view.View.VISIBLE
+        } else {
+            // Fallback to local
+            val sharedPreferences = getSharedPreferences("PomodoroSettings", MODE_PRIVATE)
+            userNameTxt.text = sharedPreferences.getString("user_name", "User") ?: "User"
+            userEmailTxt.text = sharedPreferences.getString("user_email", "user@example.com") ?: "user@example.com"
+            findViewById<TextView>(R.id.login_status_txt).text = "Login / Sign Up"
+            logoutCard.visibility = android.view.View.GONE
+        }
     }
 
     private fun loadStatsData() {

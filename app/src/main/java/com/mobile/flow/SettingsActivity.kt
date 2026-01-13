@@ -1,4 +1,4 @@
-package com.mobile.pomodoro
+package com.mobile.flow
 
 import android.Manifest
 import android.content.SharedPreferences
@@ -37,10 +37,10 @@ import android.content.pm.ActivityInfo
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.widget.Toast
-import com.mobile.pomodoro.utils.UltraFocusManager
-import com.mobile.pomodoro.utils.FirebaseSyncManager
-import com.mobile.pomodoro.utils.StatsManager
-import com.mobile.pomodoro.utils.AuthManager
+import com.mobile.flow.utils.UltraFocusManager
+import com.mobile.flow.utils.FirebaseSyncManager
+import com.mobile.flow.utils.StatsManager
+import com.mobile.flow.utils.AuthManager
 import androidx.cardview.widget.CardView
 import android.os.PowerManager
 import android.provider.Settings
@@ -81,6 +81,7 @@ class SettingsActivity : AppCompatActivity() {
     private lateinit var accountCard: CardView
     private lateinit var accountStatus: TextView
     private lateinit var syncNowBtn: TextView
+    private lateinit var signOutBtn: TextView
 
     private var isUpdatingSlider = false
 
@@ -169,7 +170,9 @@ class SettingsActivity : AppCompatActivity() {
 
         accountCard.setOnClickListener {
             vibrate()
-            startActivity(Intent(this@SettingsActivity, LoginActivity::class.java))
+            if (!AuthManager.getInstance().isSignedIn()) {
+                startActivity(Intent(this@SettingsActivity, LoginActivity::class.java))
+            }
         }
         updateAccountStatus()
         
@@ -177,19 +180,41 @@ class SettingsActivity : AppCompatActivity() {
             vibrate()
             val statsManager = StatsManager(this)
             val syncManager = FirebaseSyncManager()
+            
+            // Perform two-way sync: Upload local data, then download and merge cloud data
             syncManager.uploadStats(statsManager.loadStats(), statsManager.loadDailyStats())
-            Toast.makeText(this, "Data synced to cloud", Toast.LENGTH_SHORT).show()
+            syncManager.downloadStats { cloudSummary, cloudDaily ->
+                if (cloudSummary != null && cloudDaily != null) {
+                    statsManager.syncWithCloud(cloudSummary, cloudDaily)
+                    Toast.makeText(this, "Data synced successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Data backed up to cloud", Toast.LENGTH_SHORT).show()
+                }
+                updateAccountStatus()
+            }
+        }
+
+        signOutBtn.setOnClickListener {
+            vibrate()
+            AuthManager.getInstance().signOut()
+            updateAccountStatus()
+            Toast.makeText(this, "Signed out successfully", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun updateAccountStatus() {
         val authManager = AuthManager.getInstance()
+        val buttonsLayout = findViewById<View>(R.id.account_buttons_layout)
         if (authManager.isSignedIn()) {
             accountStatus.text = authManager.currentUser?.email ?: "Signed in"
+            buttonsLayout.visibility = View.VISIBLE
             syncNowBtn.visibility = View.VISIBLE
+            signOutBtn.visibility = View.VISIBLE
         } else {
             accountStatus.text = "Not signed in"
+            buttonsLayout.visibility = View.GONE
             syncNowBtn.visibility = View.GONE
+            signOutBtn.visibility = View.GONE
         }
     }
 
@@ -260,6 +285,7 @@ class SettingsActivity : AppCompatActivity() {
         accountCard = findViewById(R.id.account_card)
         accountStatus = findViewById(R.id.account_status)
         syncNowBtn = findViewById(R.id.sync_now_btn)
+        signOutBtn = findViewById(R.id.sign_out_btn)
     }
 
     private fun loadSavedSettings() {

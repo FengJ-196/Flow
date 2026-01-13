@@ -1,4 +1,4 @@
-package com.mobile.pomodoro.utils
+package com.mobile.flow.utils
 
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
@@ -23,7 +23,9 @@ class FirebaseSyncManager {
             "lastFocusDate" to stats.lastFocusDate,
             "currentStreak" to stats.currentStreak,
             "longestStreak" to stats.longestStreak,
-            "updatedAt" to Timestamp.now()
+            "updatedAt" to Timestamp.now(),
+            "email" to user.email,
+            "displayName" to user.displayName
         )
 
         userRef.set(summaryData, SetOptions.merge())
